@@ -14,7 +14,7 @@ entity disp is
 end entity;
 
 architecture behavior of disp is
-  component decoder
+  component hex_decoder
     port (
       i_num : in std_logic_vector(3 downto 0);
       o_hex : out std_logic_vector(6 downto 0)
@@ -23,8 +23,8 @@ architecture behavior of disp is
 
   signal s_hex : std_logic_vector(41 downto 0);
 begin
-  gen_decoder : for i in 0 to 5 generate
-    decoder0 : decoder port map (
+  gen_hex_decoder : for i in 0 to 5 generate
+    hex_decoder0 : hex_decoder port map (
       i_num => i_num(i*4+3 downto i*4),
       o_hex => s_hex(i*7+6 downto i*7)
     );
