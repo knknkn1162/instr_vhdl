@@ -5,7 +5,7 @@ FLAGS=--warn-error --workdir=${WORKDIR}/
 MODULES=\
 	flopr \
 	flopr_en \
-	decoder \
+	hex_decoder \
 	enable_generator \
 	disp
 TESTS=\

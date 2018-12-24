@@ -1,14 +1,14 @@
 library IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 
-entity decoder is
+entity hex_decoder is
   port (
     i_num : in std_logic_vector(3 downto 0);
     o_hex : out std_logic_vector(6 downto 0)
   );
 end entity;
 
-architecture behavior of decoder is
+architecture behavior of hex_decoder is
 begin
   process(i_num)
   begin
