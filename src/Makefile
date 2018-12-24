@@ -1,5 +1,5 @@
 include constants.mk
-SUBDIRS=general pkg controller component
+SUBDIRS=general display cpu
 
 .PHONY: all clean
 
