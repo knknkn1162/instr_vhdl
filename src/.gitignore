@@ -8,4 +8,6 @@ instr.qsf
 *.vcd
 *-obj93.cf
 !*/*
-!src
+!cpu
+!display
+!general
