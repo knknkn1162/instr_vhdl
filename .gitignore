@@ -1,0 +1,11 @@
+*
+!Makefile
+!*.*
+instr.qws
+instr.qpf
+instr.qsf
+*.o
+*.vcd
+work-obj93.cf
+!*/*
+!src
