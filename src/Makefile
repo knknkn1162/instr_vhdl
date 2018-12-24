@@ -10,4 +10,4 @@ all:
 	done
 
 clean:
-	rm -rf *.vcd *.o work-obj93.cf
+	rm -rf wave/*.vcd *.o *-obj93.cf
