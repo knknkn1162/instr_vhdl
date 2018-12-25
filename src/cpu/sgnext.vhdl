@@ -61,7 +61,9 @@ begin
     i_uj_s => i_uj_s,
     o_imm => s_uj_imm
   );
-  s_isb_uj_s <= '1' when i_isb_uj_s = "11" else '0';
+
+  -- s_isb_uj_s <= '1' when i_isb_uj_s = "11" else '0';
+  s_isb_uj_s <= i_isb_uj_s(0) and i_isb_uj_s(1);
 
   mux2_0 : mux2 generic map (N=>32)
   port map (
