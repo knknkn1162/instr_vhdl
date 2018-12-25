@@ -8,8 +8,8 @@ use instr.tools_pkg.ALL;
 entity imem is
   generic(filename : string; BITS : natural);
   port (
-    addr : in std_logic_vector(31 downto 0);
-    q : out std_logic_vector(31 downto 0)
+    i_addr : in std_logic_vector(31 downto 0);
+    o_q : out std_logic_vector(31 downto 0)
   );
 end entity;
 
@@ -34,12 +34,12 @@ architecture behavior of imem is
     end loop;
     file_close(memfile);
     return tmp;
-  end function;   
+  end function;
 
   -- Declare the RAM signal and specify a default value.  Quartus Prime
   -- will create a memory initialization file (.mif) based on the 
   -- default value.
   signal ram : ram_type := init_ram;
 begin
-  q <= ram(to_integer(unsigned(addr)));
+  o_q <= ram(to_integer(unsigned(i_addr)));
 end architecture;
