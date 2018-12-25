@@ -15,32 +15,27 @@ entity controller is
 end entity;
 
 architecture behavior of controller is
+  signal s_opcode5 : opcode5_vector;
 begin
-  process(i_opcode)
+  s_opcode5 <= i_opcode(6 downto 2);
+  process(s_opcode5)
   begin
-    case i_opcode(6 downto 2) is
+    case s_opcode5 is
       -- I-type(load or op-imm or jalr)
-      when "00000"|"00100"|"11001" => o_isb_uj_s <= "00";
+      when CONST_JALR|CONST_OP_IMM|CONST_LOAD => o_isb_uj_s <= "00";
       -- S-type
-      when "01000" => o_isb_uj_s <= "01";
+      when CONST_STORE => o_isb_uj_s <= "01";
       -- B-type
-      when "11000" => o_isb_uj_s <= "10";
+      when CONST_BRANCH => o_isb_uj_s <= "10";
       -- U-type or J-type
       when others =>
         o_isb_uj_s <= "11";
     end case;
   end process;
 
-  process(i_opcode)
-  begin
-    if i_opcode(6 downto 2) = "01101" or i_opcode(6 downto 2) = "01101" then
-      o_uj_s <= '0';
-    elsif i_opcode(6 downto 2) = "11011" then
-      o_uj_s <= '1';
-    else
-      o_uj_s <= 'X';
-    end if;
-  end process;
-
+  -- U-type or J-type
+  o_uj_s <= '1' when s_opcode5 = CONST_JAL else '0';
+  -- If the instruction is b-type or r-type, use rds2
+  o_rds2_immext_s <= '0' when (s_opcode5 = CONST_BRANCH or s_opcode5 = CONST_IMM) else '1';
 
 end architecture;

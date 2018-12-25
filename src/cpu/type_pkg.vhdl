@@ -21,6 +21,7 @@ package type_pkg is
   subtype funct3_vector is std_logic_vector(CONST_FUNCT3_SIZE-1 downto 0);
   subtype csr_vector is std_logic_vector(CONST_CSR_SIZE-1 downto 0);
 
+  -- See Table 19.1 in The RISC-V Instruction Set Manual vol.1
   -- B-type
   -- beq, bne, blt, bge, bltu, bgeu
   constant CONST_BRANCH : opcode5_vector := "11000";
@@ -31,7 +32,7 @@ package type_pkg is
   -- -- addi, ..
   constant CONST_OP_IMM : opcode5_vector := "00100";
   -- -- jalr
-  constant CONST_OP_JALR : opcode5_vector := "11001";
+  constant CONST_JALR : opcode5_vector := "11001";
 
   -- S-type
   constant CONST_STORE : opcode5_vector := "01000";
@@ -41,17 +42,17 @@ package type_pkg is
 
   -- U-type
   -- -- auipc : Add upper immediate to PC
-  constant CONST_OP_AUIPC : opcode5_vector := "00101";
+  constant CONST_AUIPC : opcode5_vector := "00101";
   -- -- lui : Load Upper Immediate
-  constant CONST_OP_LUI : opcode5_vector := "01101";
+  constant CONST_LUI : opcode5_vector := "01101";
 
   -- J-type
-  constant CONST_OP_JAL : opcode5_vector := "11011";
+  constant CONST_JAL : opcode5_vector := "11011";
 
   -- guarantee ordering between memory operations from different RISC-V harts.
-  constant CONST_OP_FENCE : opcode5_vector := "00011";
+  constant CONST_FENCE : opcode5_vector := "00011";
   -- e.g) ECALL, EBREAK, CSR**
-  constant CONST_OP_SYSTEM : opcode5_vector := "11100";
+  constant CONST_SYSTEM : opcode5_vector := "11100";
 
   -- R-type or I-type with ALU
   constant CONST_FUNCT3_ADD_SUB : funct3_vector := "000";
