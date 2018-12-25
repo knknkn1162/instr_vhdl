@@ -5,7 +5,7 @@ MODULES=\
 	instr_imm_decoder \
 	instr_reg_decoder \
 	instr_ctrl_decoder \
-	instr_misc_decoder \
+	instr_decoder \
 	sgnext12 \
 	sgnext20 \
 	sgnext \
