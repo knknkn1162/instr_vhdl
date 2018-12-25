@@ -41,5 +41,5 @@ architecture behavior of imem is
   -- default value.
   signal ram : ram_type := init_ram;
 begin
-  o_q <= ram(to_integer(unsigned(i_addr)));
+  o_q <= ram(to_integer(unsigned(i_addr(31 downto 2))));
 end architecture;
