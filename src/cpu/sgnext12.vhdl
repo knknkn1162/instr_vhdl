@@ -26,16 +26,16 @@ architecture behavior of sgnext12 is
     );
   end component;
 
-  signal i_btype_imm2 : imm12_vector;
+  signal s_btype_imm2 : imm12_vector;
   signal s_imm12 : imm12_vector;
   signal s_fill : std_logic_vector(31-CONST_IMM12_SIZE downto 0);
 begin
-  i_btype_imm2 <= i_btype_imm(11 downto 1) & '0';
+  s_btype_imm2 <= i_btype_imm(11 downto 1) & '0';
   mux4_0 : mux4 generic map (N=>CONST_IMM12_SIZE)
   port map (
     i_d00 => i_itype_imm,
     i_d01 => i_stype_imm,
-    i_d10 => i_btype_imm2,
+    i_d10 => s_btype_imm2,
     i_d11 => (others => '0'),
     i_s => i_isb_s,
     o_y => s_imm12

@@ -23,16 +23,20 @@ architecture behavior of sgnext20 is
         );
   end component;
 
-  signal s_imm20 : imm20_vector;
-  signal s_fill : std_logic_vector(31-CONST_IMM20_SIZE downto 0);
+  signal s_utype_imm32, s_jtype_imm32 : std_logic_vector(31 downto 0);
+  -- for j-type
+  signal s_fill : std_logic_vector(30-CONST_IMM20_SIZE downto 0);
+  constant ZEROS12 : std_logic_vector(11 downto 0) := (others => '0');
+
 begin
-  mux2_0 : mux2 generic map (N=>CONST_IMM20_SIZE)
-  port map (
-    i_d0 => i_utype_imm,
-    i_d1 => i_jtype_imm,
-    i_s => i_uj_s,
-    o_y => s_imm20
-  );
   s_fill <= (others => i_sgn);
-  o_immext <= s_fill & s_imm20;
+  s_utype_imm32 <= i_utype_imm & ZEROS12;
+  s_jtype_imm32 <= s_fill & i_jtype_imm & '0';
+  mux2_0 : mux2 generic map (N=>32)
+  port map (
+    i_d0 => s_utype_imm32,
+    i_d1 => s_jtype_imm32,
+    i_s => i_uj_s,
+    o_y => o_immext
+  );
 end architecture;
