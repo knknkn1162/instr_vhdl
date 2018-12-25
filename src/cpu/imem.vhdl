@@ -22,17 +22,20 @@ architecture behavior of imem is
     variable tmp : ram_type := (others => (others => '0'));
     variable lin : line;
     variable ch : character;
-    variable idx : natural range 0 to RAM_SIZE*2-1;
+    variable idx : std_logic_vector(8 downto 0);
   begin 
-    idx := 0;
-    while not endfile(memfile) loop
-      readline(memfile, lin);
-      for i in 0 to 7 loop
-        read(lin, ch);
-        tmp(idx)(31-i*4 downto 28-i*4) := char2bits(ch);
+    idx := (others => '0');
+
+    for i in tmp'range loop
+      if not endfile(memfile) then
+        readline(memfile, lin);
+        for i in 0 to 7 loop
+          read(lin, ch);
+          tmp(to_integer(unsigned(idx)))(31-i*4 downto 28-i*4) := char2bits(ch);
+        end loop;
+        idx := std_logic_vector(unsigned(idx)+1);
+      end if;
       end loop;
-      idx := idx + 1;
-    end loop;
     file_close(memfile);
     return tmp;
   end function;
