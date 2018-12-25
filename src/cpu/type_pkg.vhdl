@@ -8,6 +8,7 @@ package type_pkg is
   constant CONST_IMM12_SIZE : natural := 12;
   constant CONST_IMM20_SIZE : natural := 20;
   constant CONST_OPCODE_SIZE : natural := 7;
+  constant CONST_OPCODE5_SIZE : natural := 5;
   constant CONST_REG_ADDR_SIZE : natural := 5;
   constant CONST_CSR_SIZE : natural := 12;
   subtype shamt_vector is std_logic_vector(CONST_SHAMT_SIZE-1 downto 0);
@@ -16,29 +17,41 @@ package type_pkg is
   subtype imm20_vector is std_logic_vector(CONST_IMM20_SIZE-1 downto 0);
   subtype reg_addr_vector is std_logic_vector(CONST_REG_ADDR_SIZE-1 downto 0);
   subtype opcode_vector is std_logic_vector(CONST_OPCODE_SIZE-1 downto 0);
+  subtype opcode5_vector is std_logic_vector(CONST_OPCODE5_SIZE-1 downto 0);
   subtype funct3_vector is std_logic_vector(CONST_FUNCT3_SIZE-1 downto 0);
   subtype csr_vector is std_logic_vector(CONST_CSR_SIZE-1 downto 0);
 
+  -- B-type
   -- beq, bne, blt, bge, bltu, bgeu
-  constant CONST_OP_BRANCH : opcode_vector := "1100011";
-  constant CONST_OP_LOAD : opcode_vector := "0000011";
-  constant CONST_OP_STORE : opcode_vector := "0100011";
-  constant CONST_OP_ALUI : opcode_vector := "0010011";
-  constant CONST_OP_RTYPE : opcode_vector := "0110011";
+  constant CONST_BRANCH : opcode5_vector := "11000";
+
+  -- I-type instruction
+  -- -- LOAD : lb, lh, lw, lbu, lhu
+  constant CONST_LOAD : opcode5_vector := "00000";
+  -- -- addi, ..
+  constant CONST_OP_IMM : opcode5_vector := "00100";
+  -- -- jalr
+  constant CONST_OP_JALR : opcode5_vector := "11001";
+
+  -- S-type
+  constant CONST_STORE : opcode5_vector := "01000";
+
+  -- R-type
+  constant CONST_IMM : opcode5_vector := "01100";
 
   -- U-type
-  -- auipc : Add upper immediate to PC
-  constant CONST_OP_AUIPC : opcode_vector := "0010111";
-  -- lui : Load Upper Immediate
-  constant CONST_OP_LUI : opcode_vector := "0110111";
+  -- -- auipc : Add upper immediate to PC
+  constant CONST_OP_AUIPC : opcode5_vector := "00101";
+  -- -- lui : Load Upper Immediate
+  constant CONST_OP_LUI : opcode5_vector := "01101";
+
+  -- J-type
+  constant CONST_OP_JAL : opcode5_vector := "11011";
 
   -- guarantee ordering between memory operations from different RISC-V harts.
-  constant CONST_OP_FENCE : opcode_vector := "0001111";
+  constant CONST_OP_FENCE : opcode5_vector := "00011";
   -- e.g) ECALL, EBREAK, CSR**
-  constant CONST_OP_SYSTEM : opcode_vector := "1110011";
-  constant CONST_OP_JAL : opcode_vector := "1101111";
-  -- I-type instruction
-  constant CONST_OP_JALR : opcode_vector := "1100111";
+  constant CONST_OP_SYSTEM : opcode5_vector := "11100";
 
   -- R-type or I-type with ALU
   constant CONST_FUNCT3_ADD_SUB : funct3_vector := "000";
