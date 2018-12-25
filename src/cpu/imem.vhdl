@@ -6,7 +6,7 @@ use STD.TEXTIO.ALL;
 use instr.tools_pkg.ALL;
 
 entity imem is
-  generic(filename : string; BITS : natural);
+  generic(FILENAME : string; BITS : natural);
   port (
     i_addr : in std_logic_vector(31 downto 0);
     o_q : out std_logic_vector(31 downto 0)
@@ -14,16 +14,17 @@ entity imem is
 end entity;
 
 architecture behavior of imem is
-  constant ROM_SIZE : natural := 2**BITS;
-  type ram_type is array(ROM_SIZE-1 downto 0) of std_logic_vector(31 downto 0);
+  constant RAM_SIZE : natural := 2**BITS;
+  type ram_type is array(RAM_SIZE-1 downto 0) of std_logic_vector(31 downto 0);
 
   function init_ram return ram_type is 
-    file memfile : text open READ_MODE is filename;
+    file memfile : text open READ_MODE is FILENAME;
     variable tmp : ram_type := (others => (others => '0'));
     variable lin : line;
     variable ch : character;
-    variable idx : natural := 0;
+    variable idx : natural range 0 to RAM_SIZE*2-1;
   begin 
+    idx := 0;
     while not endfile(memfile) loop
       readline(memfile, lin);
       for i in 0 to 7 loop

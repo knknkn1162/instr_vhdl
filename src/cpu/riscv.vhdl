@@ -8,7 +8,7 @@ use instr.type_pkg.ALL;
 entity riscv is
   generic(MEMFILE : string);
   port (
-    clk, rst : in std_logic;
+    clk, rst, i_en : in std_logic;
     -- scan
     o_rs1, o_rs2, o_rd : out reg_addr_vector;
     o_immext : out std_logic_vector(31 downto 0)
@@ -16,10 +16,10 @@ entity riscv is
 end entity;
 
 architecture behavior of riscv is
-  component flopr
+  component flopr_en
     generic(N : natural);
     port (
-      clk, rst: in std_logic;
+      clk, rst, i_en: in std_logic;
       i_a : in std_logic_vector(N-1 downto 0);
       o_y : out std_logic_vector(N-1 downto 0)
     );
@@ -113,9 +113,9 @@ architecture behavior of riscv is
   begin
     s_we <= '1';
 
-    flopr_pc : flopr generic map(N=>32)
+    flopr_pc : flopr_en generic map(N=>32)
     port map (
-      clk => clk, rst => rst,
+      clk => clk, rst => rst, i_en => i_en,
       i_a => s_pcnext,
       o_y => s_pc
     );

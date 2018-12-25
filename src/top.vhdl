@@ -28,7 +28,7 @@ architecture behavior of top is
   component riscv
     generic(MEMFILE : string);
     port (
-      clk, rst : in std_logic;
+      clk, rst, i_en : in std_logic;
       -- scan
       o_rs1, o_rs2, o_rd : out reg_addr_vector;
       o_immext : out std_logic_vector(31 downto 0)
@@ -61,7 +61,7 @@ begin
 
   riscv0 : riscv generic map(MEMFILE=>MEMFILE)
   port map (
-    clk => clk, rst => rst,
+    clk => clk, rst => rst, i_en => s_ena,
     o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
     o_immext => s_immext
   );
