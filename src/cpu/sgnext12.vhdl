@@ -9,7 +9,7 @@ entity sgnext12 is
     i_sgn : in std_logic;
     i_itype_imm, i_btype_imm, i_stype_imm : in imm12_vector;
     i_isb_s : in std_logic_vector(1 downto 0);
-    o_imm : out std_logic_vector(31 downto 0)
+    o_immext : out std_logic_vector(31 downto 0)
   );
 end entity;
 
@@ -39,6 +39,6 @@ begin
     o_y => s_imm12
   );
   s_fill <= (others => i_sgn);
-  o_imm <= s_fill & s_imm12;
+  o_immext <= s_fill & s_imm12;
 
 end architecture;

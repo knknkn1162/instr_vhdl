@@ -8,7 +8,7 @@ entity sgnext20 is
     i_sgn : in std_logic;
     i_utype_imm, i_jtype_imm : in imm20_vector;
     i_uj_s : in std_logic;
-    o_imm : out std_logic_vector(31 downto 0)
+    o_immext : out std_logic_vector(31 downto 0)
   );
 end entity;
 
@@ -34,5 +34,5 @@ begin
     o_y => s_imm20
   );
   s_fill <= (others => i_sgn);
-  o_imm <= s_fill & s_imm20;
+  o_immext <= s_fill & s_imm20;
 end architecture;

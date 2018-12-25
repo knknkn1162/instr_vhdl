@@ -11,7 +11,7 @@ entity sgnext is
     i_utype_imm, i_jtype_imm : in imm20_vector;
     i_isb_uj_s : in std_logic_vector(1 downto 0);
     i_uj_s : in std_logic;
-    o_imm : out std_logic_vector(31 downto 0)
+    o_immext : out std_logic_vector(31 downto 0)
   );
 end entity;
 
@@ -21,7 +21,7 @@ architecture behavior of sgnext is
       i_sgn : in std_logic;
       i_itype_imm, i_btype_imm, i_stype_imm : in imm12_vector;
       i_isb_s : in std_logic_vector(1 downto 0);
-      o_imm : out std_logic_vector(31 downto 0)
+      o_immext : out std_logic_vector(31 downto 0)
     );
   end component;
 
@@ -30,7 +30,7 @@ architecture behavior of sgnext is
       i_sgn : in std_logic;
       i_utype_imm, i_jtype_imm : in imm20_vector;
       i_uj_s : in std_logic;
-      o_imm : out std_logic_vector(31 downto 0)
+      o_immext : out std_logic_vector(31 downto 0)
     );
   end component;
 
@@ -52,14 +52,14 @@ begin
     i_sgn => i_sgn,
     i_itype_imm => i_itype_imm, i_btype_imm => i_btype_imm, i_stype_imm => i_stype_imm,
     i_isb_s => i_isb_uj_s,
-    o_imm => s_isb_imm
+    o_immext => s_isb_imm
   );
 
   sgnext20_0 : sgnext20 port map (
     i_sgn => i_sgn,
     i_utype_imm => i_utype_imm, i_jtype_imm => i_jtype_imm,
     i_uj_s => i_uj_s,
-    o_imm => s_uj_imm
+    o_immext => s_uj_imm
   );
 
   -- s_isb_uj_s <= '1' when i_isb_uj_s = "11" else '0';
@@ -70,6 +70,6 @@ begin
     i_d0 => s_isb_imm,
     i_d1 => s_uj_imm,
     i_s => s_isb_uj_s,
-    o_y => o_imm
+    o_y => o_immext
   );
 end architecture;
