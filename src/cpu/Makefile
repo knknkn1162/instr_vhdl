@@ -12,7 +12,8 @@ MODULES=\
 	sgnext \
 	controller \
 	regfile \
-	imem
+	imem \
+	riscv
 TESTS=\
 	regfile
 
