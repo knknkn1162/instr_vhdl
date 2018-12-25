@@ -9,7 +9,9 @@ MODULES=\
 	sgnext12 \
 	sgnext20 \
 	sgnext \
-	controller
-#TESTS=
+	controller \
+	regfile
+TESTS=\
+	regfile
 
 include ../rules.mk
