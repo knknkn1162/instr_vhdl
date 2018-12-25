@@ -110,67 +110,70 @@ architecture behavior of riscv is
   signal s_aluarg1, s_aluarg2 : std_logic_vector(31 downto 0);
 
   signal s_we : std_logic;
-  begin
-    s_we <= '1';
+begin
+  -- for scan
+  o_rs1 <= s_rs1; o_rs2 <= s_rs2; o_rd <= s_rd;
+  o_immext <= s_immext;
 
-    flopr_pc : flopr_en generic map(N=>32)
-    port map (
-      clk => clk, rst => rst, i_en => i_en,
-      i_a => s_pcnext,
-      o_y => s_pc
-    );
+  s_we <= '1';
 
-    s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
+  flopr_pc : flopr_en generic map(N=>32)
+  port map (
+    clk => clk, rst => rst, i_en => i_en,
+    i_a => s_pcnext,
+    o_y => s_pc
+  );
 
-    imem0 : imem generic map(filename=>MEMFILE, BITS=>RAM_BIT_SIZE)
-    port map (
-      i_addr => s_pc, o_q => s_instr
-    );
+  s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
 
-    instr_decoder0 : instr_decoder port map (
-      i_instr => s_instr,
-      o_itype_imm => s_itype_imm, o_btype_imm => s_btype_imm, o_stype_imm => s_stype_imm,
-      o_utype_imm => s_utype_imm, o_jtype_imm => s_jtype_imm,
-      o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
-      o_shamt => s_shamt, o_csr => s_csr,
-      o_instr_s => s_instr_s, o_funct3 => s_funct3, o_opcode => s_opcode
-    );
+  imem0 : imem generic map(filename=>MEMFILE, BITS=>RAM_BIT_SIZE)
+  port map (
+    i_addr => s_pc, o_q => s_instr
+  );
 
-    controller0 : controller port map (
-      i_opcode => s_opcode,
-      i_funct3 => s_funct3,
-      i_instr_s => s_instr_s,
-      o_isb_uj_s => s_isb_uj_s,
-      o_uj_s => s_uj_s,
-      o_rds2_immext_s => s_rds2_immext_s
-    );
+  instr_decoder0 : instr_decoder port map (
+    i_instr => s_instr,
+    o_itype_imm => s_itype_imm, o_btype_imm => s_btype_imm, o_stype_imm => s_stype_imm,
+    o_utype_imm => s_utype_imm, o_jtype_imm => s_jtype_imm,
+    o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
+    o_shamt => s_shamt, o_csr => s_csr,
+    o_instr_s => s_instr_s, o_funct3 => s_funct3, o_opcode => s_opcode
+  );
 
-    sgnext0 : sgnext port map (
-      i_sgn => s_instr(31),
-      i_itype_imm => s_itype_imm, i_btype_imm => s_btype_imm, i_stype_imm => s_stype_imm,
-      i_utype_imm => s_utype_imm, i_jtype_imm => s_jtype_imm,
-      i_isb_uj_s => s_isb_uj_s,
-      i_uj_s => s_uj_s,
-      o_immext => s_immext
-    );
+  controller0 : controller port map (
+    i_opcode => s_opcode,
+    i_funct3 => s_funct3,
+    i_instr_s => s_instr_s,
+    o_isb_uj_s => s_isb_uj_s,
+    o_uj_s => s_uj_s,
+    o_rds2_immext_s => s_rds2_immext_s
+  );
 
-    regfile0 : regfile generic map (ADDR_WIDTH=>ADDR_WIDTH)
-    port map (
-      clk => clk, i_we => s_we,
-      i_ra1 => s_rs1, i_ra2 => s_rs2,
-      i_wa => "00000", -- dummy
-      i_wd => X"00000000", -- dummy
-      o_rd1 => s_rds1, o_rd2 => s_rds2
-    );
+  sgnext0 : sgnext port map (
+    i_sgn => s_instr(31),
+    i_itype_imm => s_itype_imm, i_btype_imm => s_btype_imm, i_stype_imm => s_stype_imm,
+    i_utype_imm => s_utype_imm, i_jtype_imm => s_jtype_imm,
+    i_isb_uj_s => s_isb_uj_s,
+    i_uj_s => s_uj_s,
+    o_immext => s_immext
+  );
 
-    s_aluarg1 <= s_rds1;
+  regfile0 : regfile generic map (ADDR_WIDTH=>ADDR_WIDTH)
+  port map (
+    clk => clk, i_we => s_we,
+    i_ra1 => s_rs1, i_ra2 => s_rs2,
+    i_wa => "00000", -- dummy
+    i_wd => X"00000000", -- dummy
+    o_rd1 => s_rds1, o_rd2 => s_rds2
+  );
 
-    rds2_immext_mux : mux2 generic map(N=>32)
-    port map (
-      i_d0 => s_rds2,
-      i_d1 => s_immext,
-      i_s => s_rds2_immext_s,
-      o_y => s_aluarg2
-    );
+  s_aluarg1 <= s_rds1;
 
+  rds2_immext_mux : mux2 generic map(N=>32)
+  port map (
+    i_d0 => s_rds2,
+    i_d1 => s_immext,
+    i_s => s_rds2_immext_s,
+    o_y => s_aluarg2
+  );
 end architecture;
