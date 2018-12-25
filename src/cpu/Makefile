@@ -11,7 +11,8 @@ MODULES=\
 	sgnext20 \
 	sgnext \
 	controller \
-	regfile
+	regfile \
+	imem
 TESTS=\
 	regfile
 
