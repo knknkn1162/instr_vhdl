@@ -8,9 +8,9 @@ entity controller is
     i_opcode : in opcode_vector;
     i_funct3 : in funct3_vector;
     i_instr_s : in std_logic;
-    o_rds2_immext_s : out std_logic;
     o_isb_uj_s : out std_logic_vector(1 downto 0);
-    o_uj_s : out std_logic
+    o_uj_s : out std_logic;
+    o_rds2_immext_s : out std_logic
   );
 end entity;
 
@@ -37,5 +37,4 @@ begin
   o_uj_s <= '1' when s_opcode5 = CONST_JAL else '0';
   -- If the instruction is b-type or r-type, use rds2
   o_rds2_immext_s <= '0' when (s_opcode5 = CONST_BRANCH or s_opcode5 = CONST_IMM) else '1';
-
 end architecture;
