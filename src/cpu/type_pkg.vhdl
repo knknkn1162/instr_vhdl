@@ -64,12 +64,9 @@ package type_pkg is
   
   -- SRL or SRA
   function shift_or_not(funct3 : funct3_vector) return std_logic;
-  function srl_or_sra(funct7: funct7_vector) return std_logic;
-  function add_or_sub(funct7 : funct7_vector) return std_logic;
 end package;
 
 package body type_pkg is
-
   function shift_or_not(funct3 : funct3_vector) return std_logic is
     variable res : std_logic;
   begin
@@ -81,15 +78,4 @@ package body type_pkg is
     end if;
     return res;
   end function;
-
-  function srl_or_sra(funct7: funct7_vector) return std_logic is
-  begin
-    return funct7(6);
-  end function;
-
-  function add_or_sub(funct7: funct7_vector) return std_logic is
-  begin
-    return funct7(6);
-  end function;
-
 end package body;
