@@ -27,7 +27,7 @@ architecture behavior of riscv is
   end component;
 
   component imem
-    generic(filename : string; BITS : natural);
+    generic(FILENAME : string; BITS : natural);
     port (
       i_addr : in std_logic_vector(31 downto 0);
       o_q : out std_logic_vector(31 downto 0)
@@ -130,7 +130,7 @@ begin
 
   s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
 
-  imem0 : imem generic map(filename=>MEMFILE, BITS=>RAM_BIT_SIZE)
+  imem0 : imem generic map(FILENAME=>MEMFILE, BITS=>RAM_BIT_SIZE)
   port map (
     i_addr => s_pc, o_q => s_instr
   );
