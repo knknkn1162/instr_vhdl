@@ -54,6 +54,27 @@ begin
   stim_proc : process
   begin
     wait for clk_period;
+    rst <= '1'; wait until rising_edge(clk); wait for 1 ns; rst <= '0';
+    assert s_ena = '0';
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_ena = '0';
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_ena = '0';
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_ena = '0';
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_ena = '1';
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_ena = '0';
+
+    s_num <= X"345678"; wait for 1 ns;
+    assert s_hex5 = "0110000";
+    assert s_hex4 = "0011001";
+    assert s_hex3 = "0010010";
+    assert s_hex2 = "0000010";
+    assert s_hex1 = "1011000";
+    assert s_hex0 = "0000000";
+
     -- skip
     stop <= TRUE;
     -- success message
