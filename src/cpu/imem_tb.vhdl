@@ -6,7 +6,7 @@ end entity;
 
 architecture testbench of imem_tb is
   component imem
-    generic(FILENAME : string; ADDR_WIDTH: natural);
+    generic(ADDR_WIDTH: natural);
     port (
       clk : in std_logic;
       i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
@@ -14,7 +14,6 @@ architecture testbench of imem_tb is
     );
   end component;
   
-  constant FILENAME : string := "./assets/test.hex";
   constant ADDR_WIDTH : natural := 9;
   signal clk : std_logic;
   signal s_ra : std_logic_vector(ADDR_WIDTH-1 downto 0);
@@ -23,7 +22,7 @@ architecture testbench of imem_tb is
   signal stop : boolean;
 
 begin
-  uut : imem generic map(FILENAME=>FILENAME, ADDR_WIDTH=>ADDR_WIDTH)
+  uut : imem generic map(ADDR_WIDTH=>ADDR_WIDTH)
   port map (
     clk => clk,
     i_ra => s_ra, o_q => s_q
