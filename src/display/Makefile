@@ -3,7 +3,8 @@ include ../constants.mk
 MODULES=\
 	hex_decoder \
 	enable_generator \
-	disp
+	disp \
+	disp_en
 TESTS=\
 	enable_generator
 
