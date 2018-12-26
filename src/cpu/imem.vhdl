@@ -2,29 +2,29 @@ library IEEE;
 library instr;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use STD.TEXTIO.ALL;
 use instr.tools_pkg.ALL;
 
 entity imem is
-  generic(FILENAME : string; BITS : natural);
+  generic(FILENAME : string; ADDR_WIDTH: natural);
   port (
-    i_addr : in std_logic_vector(BITS-1 downto 0);
+    clk : in std_logic;
+    i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
     o_q : out std_logic_vector(31 downto 0)
   );
 end entity;
 
 architecture behavior of imem is
-  constant RAM_SIZE : natural := 2**BITS;
-  type ram_type is array(RAM_SIZE-1 downto 0) of std_logic_vector(31 downto 0);
+  type ram_type is array(natural range<>) of std_logic_vector(31 downto 0);
 
   function init_ram return ram_type is 
     file memfile : text open READ_MODE is FILENAME;
-    variable tmp : ram_type := (others => (others => '0'));
+    variable tmp : ram_type(0 to 2**ADDR_WIDTH-1) := (others => (others => '0'));
     variable lin : line;
     variable ch : character;
     variable idx : std_logic_vector(8 downto 0);
   begin 
     idx := (others => '0');
-
     for i in tmp'range loop
       if not endfile(memfile) then
         readline(memfile, lin);
@@ -39,11 +39,13 @@ architecture behavior of imem is
     return tmp;
   end function;
 
-  -- Declare the RAM signal and specify a default value.  Quartus Prime
-  -- will create a memory initialization file (.mif) based on the 
-  -- default value.
+  signal s_ram : ram_type(0 to 2**ADDR_WIDTH-1) := init_ram;
 
-  signal ram : ram_type := (others => (others => '0')); -- := init_ram;
 begin
-  o_q <= ram(to_integer(unsigned(i_addr(BITS-1 downto 2))));
+  process(clk, i_ra)
+  begin
+    if rising_edge(clk) then
+      o_q <= s_ram(to_integer(unsigned(i_ra)));
+    end if;
+  end process;
 end architecture;

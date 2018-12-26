@@ -6,7 +6,7 @@ use instr.type_pkg.ALL;
 
 
 entity imem_test is
-  generic(MEMFILE : string; BITS : natural; N : natural);
+  generic(MEMFILE : string; IMEM_ADDR_WIDTH : natural; N : natural);
   port (
     clk, rst : in std_logic;
     o_hex0 : out std_logic_vector(6 downto 0);
@@ -44,9 +44,13 @@ architecture behavior of imem_test is
   end component;
 
   component imem
-    generic(FILENAME : string; BITS : natural);
+    generic(FILENAME : string; ADDR_WIDTH : natural);
     port (
-      i_addr : in std_logic_vector(31 downto 0);
+      clk : in std_logic;
+      -- i_we : in std_logic;
+      -- i_wa : in std_logic_vector(ADDR_WIDTH-1 downto 0);
+      -- i_wd : in std_logic_vector(31 downto 0);
+      i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
       o_q : out std_logic_vector(31 downto 0)
     );
   end component;
@@ -67,9 +71,12 @@ begin
 
   s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
 
-  imem0 : imem generic map(FILENAME=>MEMFILE1, BITS=>BITS)
+  imem0 : imem generic map(FILENAME=>MEMFILE1, ADDR_WIDTH=>IMEM_ADDR_WIDTH)
   port map (
-    i_addr => s_pc, o_q => s_instr
+    clk => clk,
+    -- i_we => '0',
+    -- i_wa => "000000000", i_wd => X"00000000",
+    i_ra => s_pc(IMEM_ADDR_WIDTH+1 downto 2), o_q => s_instr
   );
 
   disp_en0 : disp_en generic map(N=>N)
