@@ -41,7 +41,7 @@ begin
   stim_proc : process
   begin
     wait for clk_period;
-    s_ra <= "000000100";
+    s_ra <= "000000001";
     wait until rising_edge(clk); wait for 1 ns;
     assert s_q = X"00140493";
     -- skip
