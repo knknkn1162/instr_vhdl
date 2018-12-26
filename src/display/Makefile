@@ -6,6 +6,7 @@ MODULES=\
 	disp \
 	disp_en
 TESTS=\
-	enable_generator
+	enable_generator \
+	disp_en
 
 include ../rules.mk
