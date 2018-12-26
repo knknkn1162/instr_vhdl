@@ -47,9 +47,6 @@ architecture behavior of imem_test is
     generic(FILENAME : string; ADDR_WIDTH : natural);
     port (
       clk : in std_logic;
-      -- i_we : in std_logic;
-      -- i_wa : in std_logic_vector(ADDR_WIDTH-1 downto 0);
-      -- i_wd : in std_logic_vector(31 downto 0);
       i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
       o_q : out std_logic_vector(31 downto 0)
     );
@@ -74,8 +71,6 @@ begin
   imem0 : imem generic map(FILENAME=>MEMFILE1, ADDR_WIDTH=>IMEM_ADDR_WIDTH)
   port map (
     clk => clk,
-    -- i_we => '0',
-    -- i_wa => "000000000", i_wd => X"00000000",
     i_ra => s_pc(IMEM_ADDR_WIDTH+1 downto 2), o_q => s_instr
   );
 

@@ -6,31 +6,48 @@ end entity;
 
 architecture testbench of imem_tb is
   component imem
-    generic(FILENAME : string; BITS : natural);
+    generic(FILENAME : string; ADDR_WIDTH: natural);
     port (
-      i_addr : in std_logic_vector(BITS-1 downto 0);
+      clk : in std_logic;
+      i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
       o_q : out std_logic_vector(31 downto 0)
     );
   end component;
   
   constant FILENAME : string := "./assets/test.hex";
-  constant BITS : natural := 9;
-  signal s_addr : std_logic_vector(BITS-1 downto 0);
+  constant ADDR_WIDTH : natural := 9;
+  signal clk : std_logic;
+  signal s_ra : std_logic_vector(ADDR_WIDTH-1 downto 0);
   signal s_q : std_logic_vector(31 downto 0);
-  constant PERIOD : time := 20 ns;
+  constant CLK_PERIOD : time := 20 ns;
+  signal stop : boolean;
+
 begin
-  uut : imem generic map(FILENAME=>FILENAME, BITS=>BITS)
+  uut : imem generic map(FILENAME=>FILENAME, ADDR_WIDTH=>ADDR_WIDTH)
   port map (
-    i_addr => s_addr, o_q => s_q
+    clk => clk,
+    i_ra => s_ra, o_q => s_q
   );
 
-  stim_proc : process
+  clk_process: process
   begin
-    wait for PERIOD;
-    s_addr <= "000000100"; wait for PERIOD/2;
-    assert s_q = X"00140493";
+    while not stop loop
+      clk <= '0'; wait for clk_period/2;
+      clk <= '1'; wait for clk_period/2;
+    end loop;
     wait;
   end process;
 
-
+  stim_proc : process
+  begin
+    wait for clk_period;
+    s_ra <= "000000100";
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_q = X"00140493";
+    -- skip
+    stop <= TRUE;
+    -- success message
+    assert false report "end of test" severity note;
+    wait;
+  end process;
 end architecture;
