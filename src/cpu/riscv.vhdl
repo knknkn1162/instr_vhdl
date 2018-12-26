@@ -4,9 +4,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use instr.type_pkg.ALL;
 
-
 entity riscv is
-  generic(MEMFILE : string);
+  generic(IMEM_ADDR_WIDTH : natural);
   port (
     clk, rst, i_en : in std_logic;
     -- scan
@@ -27,9 +26,10 @@ architecture behavior of riscv is
   end component;
 
   component imem
-    generic(FILENAME : string; BITS : natural);
+    generic(ADDR_WIDTH : natural);
     port (
-      i_addr : in std_logic_vector(31 downto 0);
+      clk : in std_logic;
+      i_ra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
       o_q : out std_logic_vector(31 downto 0)
     );
   end component;
@@ -91,8 +91,7 @@ architecture behavior of riscv is
         );
   end component;
 
-  constant ADDR_WIDTH : natural := 5;
-  constant RAM_BIT_SIZE : natural := 9;
+  constant REG_ADDR_WIDTH : natural := 5;
   signal s_pcnext, s_pc : std_logic_vector(31 downto 0);
   signal s_instr : std_logic_vector(31 downto 0);
   signal s_itype_imm, s_btype_imm, s_stype_imm : imm12_vector;
@@ -107,7 +106,7 @@ architecture behavior of riscv is
   signal s_isb_uj_s : std_logic_vector(1 downto 0);
   signal s_uj_s, s_rds2_immext_s : std_logic;
 
-  -- signal s_rds1 : std_logic_vector(31 downto 0);
+  signal s_rds1 : std_logic_vector(31 downto 0);
   signal s_rds2 : std_logic_vector(31 downto 0);
   signal s_immext : std_logic_vector(31 downto 0);
   -- signal s_aluarg1, s_aluarg2 : std_logic_vector(31 downto 0);
@@ -119,8 +118,6 @@ begin
   o_immext <= s_immext;
   o_shamt <= s_shamt;
 
-  s_we <= '1';
-
   flopr_pc : flopr_en generic map(N=>32)
   port map (
     clk => clk, rst => rst, i_en => i_en,
@@ -130,9 +127,10 @@ begin
 
   s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
 
-  imem0 : imem generic map(FILENAME=>MEMFILE, BITS=>RAM_BIT_SIZE)
+  imem0 : imem generic map(ADDR_WIDTH=>IMEM_ADDR_WIDTH)
   port map (
-    i_addr => s_pc, o_q => s_instr
+    clk => clk,
+    i_ra => s_pc(IMEM_ADDR_WIDTH+1 downto 2), o_q => s_instr
   );
 
   instr_decoder0 : instr_decoder port map (
@@ -163,13 +161,14 @@ begin
     o_immext => s_immext
   );
 
-  regfile0 : regfile generic map (ADDR_WIDTH=>ADDR_WIDTH)
+  s_we <= '0';
+  regfile0 : regfile generic map (ADDR_WIDTH=>REG_ADDR_WIDTH)
   port map (
     clk => clk, i_we => s_we,
     i_ra1 => s_rs1, i_ra2 => s_rs2,
     i_wa => "00000", -- dummy
     i_wd => X"00000000", -- dummy
-    -- o_rd1 => s_rds1
+    o_rd1 => s_rds1,
     o_rd2 => s_rds2
   );
 

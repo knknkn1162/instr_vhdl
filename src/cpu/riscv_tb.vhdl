@@ -8,17 +8,16 @@ end entity;
 
 architecture testbench of riscv_tb is
   component riscv
-    generic(MEMFILE : string);
+    generic(IMEM_ADDR_WIDTH : natural);
     port (
       clk, rst, i_en : in std_logic;
-      -- scan
       o_rs1, o_rs2, o_rd : out reg_addr_vector;
       o_immext : out std_logic_vector(31 downto 0);
       o_shamt : out shamt_vector
     );
   end component;
 
-  constant MEMFILE : string := "./assets/test.hex";
+  constant IMEM_ADDR_WIDTH : natural := 9;
   signal clk, rst, s_en : std_logic;
   signal s_rs1, s_rs2, s_rd : reg_addr_vector;
   signal s_immext : std_logic_vector(31 downto 0);
@@ -27,7 +26,7 @@ architecture testbench of riscv_tb is
   signal s_stop : boolean;
 
 begin
-  uut : riscv generic map(MEMFILE=>MEMFILE)
+  uut : riscv generic map(IMEM_ADDR_WIDTH=>IMEM_ADDR_WIDTH)
   port map (
     clk => clk, rst => rst, i_en => s_en,
     o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
@@ -45,10 +44,13 @@ begin
 
   stim_proc : process
   begin
-    wait for CLK_PERIOD;
+    wait for CLK_PERIOD*3;
 
     rst <= '1'; s_en <= '1'; wait until rising_edge(clk); wait for 1 ns; rst <= '0';
 
+    -- wait for instruction sync_rom
+    assert s_rs1 = "10100"; assert s_rs2 = "10101"; assert s_rd = "01001";
+    wait until rising_edge(clk); wait for 1 ns;
     -- 015A04B3 ;; add x9, x20, x21
     assert s_rs1 = "10100"; assert s_rs2 = "10101"; assert s_rd = "01001";
 
@@ -59,6 +61,13 @@ begin
     wait until rising_edge(clk); wait for 1 ns;
     -- 4049D593 ;; srai x11, x19, 4
     assert s_rs1 = "10011"; assert s_shamt = "00100"; assert s_rd = "01011";
+    s_en <= '0'; wait until rising_edge(clk); wait for 1 ns;
+    -- 0F053483 ;; ld x9 240(x10)
+    assert s_rs1 = "01010"; assert s_immext = X"000000F0"; assert s_rd = "01001";
+    -- 0F053483 ;; ld x9 240(x10)
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_rs1 = "01010"; assert s_immext = X"000000F0"; assert s_rd = "01001";
+
     -- skip
     s_stop <= TRUE;
     -- success message
