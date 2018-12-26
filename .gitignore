@@ -1,8 +1,9 @@
 *
 !Makefile
 !*.*
-instr.qws
-instr.qpf
+imem.qws
+imem.qpf
+*.txt
 *.o
 *.vcd
 work-obj93.cf
