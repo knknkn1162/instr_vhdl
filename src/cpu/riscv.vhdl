@@ -11,7 +11,8 @@ entity riscv is
     clk, rst, i_en : in std_logic;
     -- scan
     o_rs1, o_rs2, o_rd : out reg_addr_vector;
-    o_immext : out std_logic_vector(31 downto 0)
+    o_immext : out std_logic_vector(31 downto 0);
+    o_shamt : out shamt_vector
   );
 end entity;
 
@@ -98,7 +99,7 @@ architecture behavior of riscv is
   signal s_utype_imm, s_jtype_imm : imm20_vector;
   signal s_rs1, s_rs2, s_rd : reg_addr_vector;
   signal s_shamt : shamt_vector;
-  signal s_csr : csr_vector;
+  -- signal s_csr : csr_vector;
   signal s_instr_s : std_logic;
   signal s_funct3 : funct3_vector;
   signal s_opcode : opcode_vector;
@@ -106,14 +107,17 @@ architecture behavior of riscv is
   signal s_isb_uj_s : std_logic_vector(1 downto 0);
   signal s_uj_s, s_rds2_immext_s : std_logic;
 
-  signal s_rds1, s_rds2, s_immext : std_logic_vector(31 downto 0);
-  signal s_aluarg1, s_aluarg2 : std_logic_vector(31 downto 0);
+  -- signal s_rds1 : std_logic_vector(31 downto 0);
+  signal s_rds2 : std_logic_vector(31 downto 0);
+  signal s_immext : std_logic_vector(31 downto 0);
+  -- signal s_aluarg1, s_aluarg2 : std_logic_vector(31 downto 0);
 
   signal s_we : std_logic;
 begin
   -- for scan
   o_rs1 <= s_rs1; o_rs2 <= s_rs2; o_rd <= s_rd;
   o_immext <= s_immext;
+  o_shamt <= s_shamt;
 
   s_we <= '1';
 
@@ -136,7 +140,8 @@ begin
     o_itype_imm => s_itype_imm, o_btype_imm => s_btype_imm, o_stype_imm => s_stype_imm,
     o_utype_imm => s_utype_imm, o_jtype_imm => s_jtype_imm,
     o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
-    o_shamt => s_shamt, o_csr => s_csr,
+    o_shamt => s_shamt,
+    -- o_csr => s_csr,
     o_instr_s => s_instr_s, o_funct3 => s_funct3, o_opcode => s_opcode
   );
 
@@ -164,16 +169,17 @@ begin
     i_ra1 => s_rs1, i_ra2 => s_rs2,
     i_wa => "00000", -- dummy
     i_wd => X"00000000", -- dummy
-    o_rd1 => s_rds1, o_rd2 => s_rds2
+    -- o_rd1 => s_rds1
+    o_rd2 => s_rds2
   );
 
-  s_aluarg1 <= s_rds1;
+  -- s_aluarg1 <= s_rds1;
 
   rds2_immext_mux : mux2 generic map(N=>32)
   port map (
     i_d0 => s_rds2,
     i_d1 => s_immext,
-    i_s => s_rds2_immext_s,
-    o_y => s_aluarg2
+    i_s => s_rds2_immext_s
+    -- o_y => s_aluarg2
   );
 end architecture;

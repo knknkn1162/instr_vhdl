@@ -49,7 +49,7 @@ architecture behavior of top is
 
   signal s_ena : std_logic;
   signal s_num : std_logic_vector(23 downto 0);
-  signal s_rs1, s_rs2, s_rd : reg_addr_vector;
+  -- signal s_rs1, s_rs2, s_rd : reg_addr_vector;
   signal s_immext : std_logic_vector(31 downto 0);
 
 begin
@@ -62,7 +62,7 @@ begin
   riscv0 : riscv generic map(MEMFILE=>MEMFILE)
   port map (
     clk => clk, rst => rst, i_en => s_ena,
-    o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
+    -- o_rs1 => s_rs1, o_rs2 => s_rs2, o_rd => s_rd,
     o_immext => s_immext
   );
 

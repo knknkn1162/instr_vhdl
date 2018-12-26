@@ -15,6 +15,7 @@ MODULES=\
 	imem \
 	riscv
 TESTS=\
-	regfile
+	regfile \
+	riscv
 
 include ../rules.mk
