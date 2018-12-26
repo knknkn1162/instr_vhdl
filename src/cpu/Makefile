@@ -16,7 +16,8 @@ MODULES=\
 	imem_test
 	#riscv
 TESTS=\
-	regfile
+	regfile \
+	imem
 	#riscv
 
 include ../rules.mk

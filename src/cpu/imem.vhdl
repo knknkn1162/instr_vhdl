@@ -2,13 +2,12 @@ library IEEE;
 library instr;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use STD.TEXTIO.ALL;
 use instr.tools_pkg.ALL;
 
 entity imem is
   generic(FILENAME : string; BITS : natural);
   port (
-    i_addr : in std_logic_vector(31 downto 0);
+    i_addr : in std_logic_vector(BITS-1 downto 0);
     o_q : out std_logic_vector(31 downto 0)
   );
 end entity;
@@ -43,7 +42,8 @@ architecture behavior of imem is
   -- Declare the RAM signal and specify a default value.  Quartus Prime
   -- will create a memory initialization file (.mif) based on the 
   -- default value.
-  signal ram : ram_type := init_ram;
+
+  signal ram : ram_type := (others => (others => '0')); -- := init_ram;
 begin
-  o_q <= ram(to_integer(unsigned(i_addr(31 downto 2))));
+  o_q <= ram(to_integer(unsigned(i_addr(BITS-1 downto 2))));
 end architecture;
