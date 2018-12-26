@@ -43,15 +43,16 @@ architecture behavior of imem_test is
     );
   end component;
 
-  -- component imem
-  --   generic(filename : string; BITS : natural);
-  --   port (
-  --     i_addr : in std_logic_vector(31 downto 0);
-  --     o_q : out std_logic_vector(31 downto 0)
-  --   );
-  -- end component;
+  component imem
+    generic(FILENAME : string; BITS : natural);
+    port (
+      i_addr : in std_logic_vector(31 downto 0);
+      o_q : out std_logic_vector(31 downto 0)
+    );
+  end component;
 
   constant ADDR_WIDTH : natural := 5;
+  constant MEMFILE1 : string := "/home/knknkn1162/Documents/share/sample/imem/src/cpu/assets/test.hex";
   signal s_pcnext, s_pc : std_logic_vector(31 downto 0);
   signal s_instr : std_logic_vector(31 downto 0);
   signal s_en : std_logic;
@@ -66,12 +67,11 @@ begin
 
   s_pcnext <= std_logic_vector(unsigned(s_pc) + 4);
 
-  -- imem0 : imem generic map(filename=>MEMFILE, BITS=>BITS)
-  -- port map (
-  --   i_addr => s_pc, o_q => s_instr
-  -- );
+  imem0 : imem generic map(FILENAME=>MEMFILE1, BITS=>BITS)
+  port map (
+    i_addr => s_pc, o_q => s_instr
+  );
 
-  s_instr <= s_pcnext;
   disp_en0 : disp_en generic map(N=>N)
   port map (
     clk => clk, rst => rst,
