@@ -13,9 +13,10 @@ MODULES=\
 	controller \
 	regfile \
 	imem \
-	riscv
+	imem_test
+	#riscv
 TESTS=\
-	regfile \
-	riscv
+	regfile
+	#riscv
 
 include ../rules.mk
