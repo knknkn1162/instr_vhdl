@@ -27,7 +27,7 @@ architecture behavior of imem is
       tmp(4) := X"00008067";
       tmp(5) := X"0E953823";
       tmp(6) := X"7CB51863";
-      tmp(7) := X"003D08B7";
+      tmp(7) := X"003D09B7";
       tmp(8) := X"7D00006F";
     return tmp;
   end function;
