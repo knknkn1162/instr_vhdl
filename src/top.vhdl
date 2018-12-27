@@ -17,12 +17,17 @@ entity top is
 end entity;
 
 architecture behavior of top is
-  component disp_en
+  component enable_generator
     generic(N : natural);
     port (
       clk, rst : in std_logic;
+      o_ena : out std_logic
+    );
+  end component;
+
+  component disp
+    port (
       i_num : in std_logic_vector(23 downto 0);
-      o_ena : out std_logic;
       o_hex0 : out std_logic_vector(6 downto 0);
       o_hex1 : out std_logic_vector(6 downto 0);
       o_hex2 : out std_logic_vector(6 downto 0);
@@ -49,6 +54,12 @@ architecture behavior of top is
   signal s_immext : std_logic_vector(31 downto 0);
 
 begin
+  enable_generator0 : enable_generator generic map(N=>N)
+  port map (
+    clk => clk, rst => rst,
+    o_ena => s_ena
+  );
+
   riscv0 : riscv generic map(IMEM_ADDR_WIDTH=>IMEM_ADDR_WIDTH)
   port map (
     clk => clk, rst => rst, i_en => s_ena,
@@ -58,9 +69,8 @@ begin
 
   s_num <= s_immext(23 downto 0);
 
-  disp_en0 : disp_en generic map(N=>N)
+  disp0 : disp
   port map (
-    clk => clk, rst => rst, o_ena => s_ena,
     i_num => s_num,
     o_hex0 => o_hex0, o_hex1 => o_hex1, o_hex2 => o_hex2,
     o_hex3 => o_hex3, o_hex4 => o_hex4, o_hex5 => o_hex5
