@@ -6,7 +6,6 @@ MODULES=\
 	enable_switch \
 	disp
 TESTS=\
-	enable_generator \
-	enable_switch
+	enable_generator
 
 include ../rules.mk
