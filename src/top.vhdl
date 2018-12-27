@@ -6,7 +6,7 @@ use instr.type_pkg.ALL;
 entity top is
   generic(IMEM_ADDR_WIDTH: natural; N : natural);
   port (
-    clk, rst : in std_logic;
+    clk, rst, i_btn : in std_logic;
     o_hex0 : out std_logic_vector(6 downto 0);
     o_hex1 : out std_logic_vector(6 downto 0);
     o_hex2 : out std_logic_vector(6 downto 0);
@@ -17,11 +17,12 @@ entity top is
 end entity;
 
 architecture behavior of top is
-  component enable_generator
+  component enable_switch
     generic(N : natural);
     port (
-      clk, rst : in std_logic;
-      o_ena : out std_logic
+      clk : in std_logic;
+      i_btn : in std_logic;
+      o_en : out std_logic
     );
   end component;
 
@@ -54,10 +55,10 @@ architecture behavior of top is
   signal s_immext : std_logic_vector(31 downto 0);
 
 begin
-  enable_generator0 : enable_generator generic map(N=>N)
+  enable_switch0 : enable_switch generic map(N=>N)
   port map (
-    clk => clk, rst => rst,
-    o_ena => s_ena
+    clk => clk, i_btn => i_btn,
+    o_en => s_ena
   );
 
   riscv0 : riscv generic map(IMEM_ADDR_WIDTH=>IMEM_ADDR_WIDTH)
