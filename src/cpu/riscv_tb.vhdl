@@ -83,7 +83,12 @@ begin
     wait until rising_edge(clk); wait for 1 ns;
     -- 7CB51867 ;; bne x10, x11, 2000
     assert s_rs1 = "01010"; assert s_rs2 = "01011"; assert s_immext = X"000007D0";
+    wait until rising_edge(clk); wait for 1 ns;
     -- 003D08B7 ;; lui x19 976
+    assert s_rd = "10011"; assert s_immext = X"003D0000";
+
+    wait until rising_edge(clk); wait for 1 ns;
+    assert s_rd = "00000"; assert s_immext = X"000007D0";
     -- 7D00006F ;; jal x0, 2000
 
     -- skip
