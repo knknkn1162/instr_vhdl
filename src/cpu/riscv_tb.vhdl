@@ -57,6 +57,7 @@ begin
     wait until rising_edge(clk); wait for 1 ns;
     -- 00140493 ;; addi x9, x8, 1
     assert s_rs1 = "01000"; assert s_immext = X"00000001"; assert s_rd = "01001";
+    assert s_immext = X"00000001";
 
     wait until rising_edge(clk); wait for 1 ns;
     -- 4049D593 ;; srai x11, x19, 4
@@ -64,9 +65,26 @@ begin
     s_en <= '0'; wait until rising_edge(clk); wait for 1 ns;
     -- 0F053483 ;; ld x9 240(x10)
     assert s_rs1 = "01010"; assert s_immext = X"000000F0"; assert s_rd = "01001";
-    -- 0F053483 ;; ld x9 240(x10)
+    assert s_immext = X"000000F0";
     wait until rising_edge(clk); wait for 1 ns;
+    -- 0F053483 ;; ld x9 240(x10)
     assert s_rs1 = "01010"; assert s_immext = X"000000F0"; assert s_rd = "01001";
+    s_en <= '1'; wait until rising_edge(clk); wait for 1 ns;
+    -- 0F053483 ;; ld x9 240(x10)
+    assert s_rs1 = "01010"; assert s_immext = X"000000F0"; assert s_rd = "01001";
+    wait until rising_edge(clk); wait for 1 ns;
+    -- 00008067 ;; jalr x0, 0(x1)
+    assert s_rs1 = "00001"; assert s_rd = "00000"; assert s_immext = X"00000000";
+
+    wait until rising_edge(clk); wait for 1 ns;
+    -- 0E953823 ;; sd x9, 240(x10)
+    assert s_rs1 = "01010"; assert s_rs2 = "01001"; assert s_immext = X"000000F0";
+
+    wait until rising_edge(clk); wait for 1 ns;
+    -- 7CB51867 ;; bne x10, x11, 2000
+    assert s_rs1 = "01010"; assert s_rs2 = "01011"; assert s_immext = X"000007D0";
+    -- 003D08B7 ;; lui x19 976
+    -- 7D00006F ;; jal x0, 2000
 
     -- skip
     s_stop <= TRUE;
