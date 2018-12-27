@@ -39,7 +39,7 @@ begin
     assert s_en = '0';
     wait until rising_edge(clk); wait for 1 ns;
     assert s_en = '1';
-    assert s_btn = '0';wait until rising_edge(clk); wait for 1 ns;
+    s_btn <= '0';wait until rising_edge(clk); wait for 1 ns;
     assert s_en /= '1';
     stop <= TRUE;
     -- success message

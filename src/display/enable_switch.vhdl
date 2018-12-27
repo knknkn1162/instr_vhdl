@@ -16,6 +16,8 @@ begin
     if rising_edge(clk) then
       if i_btn = '1' then
         o_en <= '1';
+      else
+        o_en <= '0';
       end if;
     end if;
   end process;
